@@ -190,6 +190,7 @@ class redis::sentinel (
   $parallel_sync          = $::redis::params::sentinel_parallel_sync,
   $pid_file               = $::redis::params::sentinel_pid_file,
   $quorum                 = $::redis::params::sentinel_quorum,
+  $requirepass            = $::redis::params::sentinel_requirepass,
   $sentinel_bind          = $::redis::params::sentinel_bind,
   Stdlib::Port $sentinel_port = $::redis::params::sentinel_port,
   $service_group          = $::redis::params::service_group,
@@ -264,4 +265,13 @@ class redis::sentinel (
     hasstatus  => $::redis::params::service_hasstatus,
   }
 
+  $redis_version_real = pick(getvar('redis_server_version'))
+  
+  if ($redis_version_real and $conf_template == 'redis/redis-sentinel.conf.erb') {
+    if versioncmp($redis_version_real, '5.0.1') >= 0 {
+      File[$config_file_orig] { content => template('redis/redis-sentinel.conf.5.0.erb') }
+    }
+  } else {
+    File[$config_file_orig] { content => template($conf_template) }
+  }
 }

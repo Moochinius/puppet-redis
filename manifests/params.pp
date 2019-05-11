@@ -68,6 +68,7 @@ class redis::params {
   $sentinel_pid_file               = '/var/run/redis/redis-sentinel.pid'
   $sentinel_notification_script    = undef
   $sentinel_client_reconfig_script = undef
+  $sentinel_requirepass            = undef
   $service_provider                = undef
   $set_max_intset_entries          = 512
   $slave_priority                  = 100
